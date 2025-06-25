@@ -1,0 +1,79 @@
+policies:
+  - name: forbid-adminaccess-policy-attachment
+    resource: terraform.aws_iam_policy_attachment
+    filters:
+      - type: value
+        key: policy_arn
+        op: regex
+        value: (?i).*adminaccess.*
+    actions:
+      - type: webhook
+        op: delete
+        days: 0
+
+  - name: flag-admin-policy-data-sources
+    resource: terraform.data.aws_iam_policy
+    filters:
+      - or:
+          - type: value
+            key: name
+            op: regex
+            value: (?i).*adminaccess.*
+          - type: value
+            key: arn
+            op: regex
+            value: (?i).*adminaccess.*
+    actions:
+      - type: webhook
+        op: delete
+        days: 0
+
+
+# policies:
+  # - name: forbid-adminaccess-policy-attachment
+    # resource: terraform.aws_iam_policy_attachment
+    # filters:
+      # - type: value
+        # key: policy_arn
+        # op: regex
+        # value: (?i).*adminaccess.*
+      # # Example of using traverse filter to check the associated role
+      # - type: traverse
+        # resource: terraform.aws_iam_role  # Or terraform.aws_iam_user, terraform.aws_iam_group
+        # filters:
+          # - name: admin-role  # Name of the traverse filter
+            # # Add filters specific to the related resource (e.g., check role properties)
+            # # Example: check if the role has a specific tag
+          # - type: value
+            # key: tags.Environment
+            # value: production
+    # actions:
+      # - type: webhook
+        # op: delete
+        # days: 0
+
+  # - name: flag-admin-policy-data-sources
+    # resource: terraform.data.aws_iam_policy
+    # filters:
+      # - or:
+          # - type: value
+            # key: name
+            # op: regex
+            # value: (?i).*adminaccess.*
+          # - type: value
+            # key: arn
+            # op: regex
+            # value: (?i).*adminaccess.*
+      # # Example of using traverse filter to check resources that use this data source
+      # - type: traverse
+        # resource: terraform.aws_iam_policy_attachment  # Or relevant resource type
+        # filters:
+          # - name: policy-attachment-using-data-source
+            # # Add filters specific to the attached resource
+          # - type: value
+            # key: users  # Or roles, groups
+            # op: not-empty
+    # actions:
+      # - type: webhook
+        # op: delete
+        # days: 0

@@ -1,0 +1,6 @@
+- resource.__tfmeta.filename: noncomply1.tf
+  file_line_start: 1
+# - resource.__tfmeta.filename: noncomply2.tf
+  # file_line_start: 1
+# - resource.__tfmeta.filename: noncomply3.tf
+  # file_line_start: 1
